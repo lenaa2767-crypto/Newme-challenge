@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>👑 لوحة المشرفة — تحدي الصحة</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#FF6B9D;--purple:#C44DFF;--teal:#00D4AA;--yellow:#FFD93D;
+  --orange:#FF8C42;--blue:#60A5FA;--red:#FF4757;--green:#2ED573;
+  --bg:#0A0A14;--card:#111128;--card2:#16163A;--text:#F8F0FF;--text2:#9090B8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 40% at 20% 10%,rgba(196,77,255,.15) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 90%,rgba(255,107,157,.15) 0%,transparent 60%);}
+
+.header{background:linear-gradient(135deg,rgba(196,77,255,.15),rgba(255,107,157,.1));border-bottom:1px solid rgba(255,255,255,.07);padding:16px 20px;position:sticky;top:0;z-index:100;backdrop-filter:blur(20px);}
+.header-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.header-title{font-size:20px;font-weight:900;background:linear-gradient(135deg,var(--pink),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.header-badge{font-size:11px;font-weight:800;color:var(--teal);background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.2);border-radius:20px;padding:4px 12px;}
+.btn-refresh{padding:8px 18px;border:none;border-radius:12px;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;}
+.btn-refresh:active{opacity:.8;}
+
+.wrap{max-width:900px;margin:0 auto;padding:20px 16px 60px;}
+
+/* stats overview */
+.overview{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px;}
+@media(min-width:600px){.overview{grid-template-columns:repeat(4,1fr);}}
+.ov-box{background:var(--card);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:16px;text-align:center;}
+.ov-val{font-size:28px;font-weight:900;display:block;background:linear-gradient(135deg,var(--yellow),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.ov-lbl{font-size:11px;color:var(--text2);font-weight:700;margin-top:4px;display:block;}
+
+/* leaderboard */
+.section-title{font-size:14px;font-weight:900;color:var(--text2);letter-spacing:1px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.leaderboard{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;}
+.lb-item{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;transition:all .2s;}
+.lb-item:hover{border-color:rgba(255,107,157,.2);}
+.lb-rank{font-size:20px;font-weight:900;min-width:36px;text-align:center;}
+.lb-rank.r1{color:var(--yellow);}
+.lb-rank.r2{color:var(--text2);}
+.lb-rank.r3{color:var(--orange);}
+.lb-info{flex:1;min-width:0;}
+.lb-name{font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lb-sub{font-size:11px;color:var(--text2);margin-top:3px;display:flex;gap:8px;flex-wrap:wrap;}
+.lb-pts{font-size:18px;font-weight:900;color:var(--yellow);white-space:nowrap;}
+.lb-phase{font-size:10px;font-weight:800;border-radius:20px;padding:3px 10px;}
+.ph1{background:rgba(155,93,229,.15);color:#9b5de5;border:1px solid rgba(155,93,229,.3);}
+.ph2{background:rgba(255,107,157,.15);color:var(--pink);border:1px solid rgba(255,107,157,.3);}
+.progress-mini{height:5px;background:rgba(255,255,255,.06);border-radius:50px;overflow:hidden;margin-top:6px;}
+.progress-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--purple),var(--pink));}
+
+/* today section */
+.today-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:24px;}
+@media(min-width:500px){.today-grid{grid-template-columns:repeat(3,1fr);}}
+.today-box{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:12px;text-align:center;}
+.today-name{font-size:12px;font-weight:800;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.today-status{font-size:18px;}
+.today-pts{font-size:10px;color:var(--text2);margin-top:2px;}
+
+/* player detail */
+.player-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;}
+.pc{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:16px;cursor:pointer;}
+.pc:hover{border-color:rgba(0,212,170,.2);}
+.pc-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.pc-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--pink));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.pc-name{font-size:15px;font-weight:800;}
+.pc-day{font-size:11px;color:var(--text2);margin-top:2px;}
+.pc-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.pc-stat{background:rgba(255,255,255,.04);border-radius:10px;padding:8px 4px;text-align:center;}
+.pc-stat-val{font-size:16px;font-weight:900;display:block;color:var(--teal);}
+.pc-stat-lbl{font-size:9px;color:var(--text2);margin-top:2px;display:block;}
+.pc-bar{margin-top:10px;}
+.pc-bar-lbl{font-size:10px;color:var(--text2);margin-bottom:4px;display:flex;justify-content:space-between;}
+.pc-bar-bg{height:6px;background:rgba(255,255,255,.06);border-radius:50px;overflow:hidden;}
+.pc-bar-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--teal),var(--blue));transition:width .5s;}
+
+/* no data */
+.no-data{text-align:center;padding:60px 20px;color:var(--text2);}
+.no-data-icon{font-size:50px;display:block;margin-bottom:12px;}
+.no-data-txt{font-size:14px;line-height:1.7;}
+
+/* loading */
+.loading{text-align:center;padding:40px;color:var(--text2);}
+.loading-spin{font-size:30px;display:block;animation:spin 1s linear infinite;margin-bottom:10px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* tabs */
+.tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+.tab{padding:9px 18px;border:1.5px solid rgba(255,255,255,.08);border-radius:12px;background:transparent;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:800;cursor:pointer;color:var(--text2);transition:all .2s;}
+.tab.active{background:linear-gradient(135deg,rgba(196,77,255,.2),rgba(255,107,157,.2));border-color:rgba(255,107,157,.4);color:var(--pink);}
+
+/* alert */
+.alert-box{background:rgba(255,107,157,.08);border:1.5px solid rgba(255,107,157,.2);border-radius:14px;padding:14px 16px;margin-bottom:16px;font-size:13px;line-height:1.6;}
+.alert-title{font-weight:900;color:var(--pink);margin-bottom:4px;}
+
+/* footer */
+.footer{text-align:center;font-size:11px;color:rgba(255,255,255,.15);padding:20px;position:fixed;bottom:0;width:100%;background:var(--bg);}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <div class="header-title">👑 لوحة المشرفة</div>
+      <div style="font-size:11px;color:var(--text2);margin-top:2px;">تحدي الصحة ٢٨ يوماً 🌸</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="header-badge" id="lastUpdate">جاري التحميل...</div>
+      <button class="btn-refresh" onclick="loadData()">🔄 تحديث</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- Overview Stats -->
+  <div class="overview" id="overview">
+    <div class="ov-box"><span class="ov-val" id="ovTotal">—</span><span class="ov-lbl">👥 إجمالي المشتركات</span></div>
+    <div class="ov-box"><span class="ov-val" id="ovToday">—</span><span class="ov-lbl">✅ لعبن اليوم</span></div>
+    <div class="ov-box"><span class="ov-val" id="ovAvgPts">—</span><span class="ov-lbl">⭐ متوسط النقاط</span></div>
+    <div class="ov-box"><span class="ov-val" id="ovAvgStreak">—</span><span class="ov-lbl">🔥 متوسط الـ streak</span></div>
+  </div>
+
+  <!-- Alert for inactive -->
+  <div class="alert-box" id="alertBox" style="display:none">
+    <div class="alert-title">⚠️ مشتركات لم يلعبن اليوم</div>
+    <div id="alertNames"></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('leaderboard',this)">🏆 الترتيب</button>
+    <button class="tab" onclick="switchTab('today',this)">📅 اليوم</button>
+    <button class="tab" onclick="switchTab('players',this)">👥 المشتركات</button>
+  </div>
+
+  <!-- Leaderboard Tab -->
+  <div id="tab-leaderboard">
+    <div class="section-title">🏆 ترتيب النقاط</div>
+    <div class="leaderboard" id="leaderboardList">
+      <div class="loading"><span class="loading-spin">⏳</span>جاري تحميل البيانات...</div>
+    </div>
+  </div>
+
+  <!-- Today Tab -->
+  <div id="tab-today" style="display:none">
+    <div class="section-title">📅 من لعبت اليوم</div>
+    <div class="today-grid" id="todayGrid">
+      <div class="loading"><span class="loading-spin">⏳</span>جاري التحميل...</div>
+    </div>
+  </div>
+
+  <!-- Players Tab -->
+  <div id="tab-players" style="display:none">
+    <div class="section-title">👥 تفاصيل المشتركات</div>
+    <div class="player-cards" id="playerCards">
+      <div class="loading"><span class="loading-spin">⏳</span>جاري التحميل...</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">© 2026 نايا — جميع الحقوق محفوظة 🌸</div>
+
+<script>
+const FB_URL='https://new-me-challenge-default-rtdb.firebaseio.com';
+let allPlayers=[];
+let activeTab='leaderboard';
+
+function ar(n){return String(Math.round(n)).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);}
+
+function switchTab(name,btn){
+  activeTab=name;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  ['leaderboard','today','players'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display=t===name?'block':'none';
+  });
+}
+
+async function loadData(){
+  document.getElementById('lastUpdate').textContent='جاري التحديث...';
+  try{
+    const res=await fetch(`${FB_URL}/players.json`);
+    const data=await res.json();
+    if(!data){showEmpty();return;}
+    allPlayers=Object.values(data).sort((a,b)=>b.points-a.points);
+    renderAll();
+    const now=new Date();
+    document.getElementById('lastUpdate').textContent=`آخر تحديث: ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+  }catch(e){
+    document.getElementById('lastUpdate').textContent='خطأ في التحميل';
+    console.error(e);
+  }
+}
+
+function showEmpty(){
+  document.getElementById('leaderboardList').innerHTML='<div class="no-data"><span class="no-data-icon">🌸</span><div class="no-data-txt">لا توجد بيانات بعد<br>انتظري البنات يبدأن التحدي!</div></div>';
+}
+
+function renderAll(){
+  renderOverview();
+  renderLeaderboard();
+  renderToday();
+  renderPlayers();
+}
+
+function renderOverview(){
+  const total=allPlayers.length;
+  const now=Date.now();
+  const todayActive=allPlayers.filter(p=>p.lastUpdate&&(now-p.lastUpdate)<86400000).length;
+  const avgPts=total>0?allPlayers.reduce((a,p)=>a+(p.points||0),0)/total:0;
+  const avgStreak=total>0?allPlayers.reduce((a,p)=>a+(p.streak||0),0)/total:0;
+  document.getElementById('ovTotal').textContent=ar(total);
+  document.getElementById('ovToday').textContent=ar(todayActive);
+  document.getElementById('ovAvgPts').textContent=ar(avgPts);
+  document.getElementById('ovAvgStreak').textContent=ar(avgStreak);
+
+  // Alert for inactive
+  const inactive=allPlayers.filter(p=>!p.lastUpdate||(now-p.lastUpdate)>86400000);
+  if(inactive.length>0){
+    document.getElementById('alertBox').style.display='block';
+    document.getElementById('alertNames').textContent=inactive.map(p=>p.name).join('، ');
+  }else{
+    document.getElementById('alertBox').style.display='none';
+  }
+}
+
+function renderLeaderboard(){
+  const list=document.getElementById('leaderboardList');
+  if(!allPlayers.length){list.innerHTML='<div class="no-data"><span class="no-data-icon">🌸</span><div class="no-data-txt">لا توجد بيانات بعد!</div></div>';return;}
+  const medals=['🥇','🥈','🥉'];
+  list.innerHTML=allPlayers.map((p,i)=>{
+    const rankCls=i<3?`r${i+1}`:'';
+    const rank=i<3?medals[i]:`${ar(i+1)}`;
+    const phaseCls=p.phase===2?'ph2':'ph1';
+    const phaseTxt=p.phase===2?'🏠 المونوبولي':'🎲 السلم والحية';
+    const prog=Math.round((p.day||1)/28*100);
+    const now=Date.now();
+    const active=p.lastUpdate&&(now-p.lastUpdate)<86400000;
+    return `<div class="lb-item">
+      <div class="lb-rank ${rankCls}">${rank}</div>
+      <div class="lb-info">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="lb-name">${p.name}</div>
+          <span class="lb-phase ${phaseCls}">${phaseTxt}</span>
+          ${active?'<span style="font-size:10px;color:var(--green);">● نشطة</span>':'<span style="font-size:10px;color:var(--text2);">○ غائبة</span>'}
+        </div>
+        <div class="lb-sub">
+          <span>📅 يوم ${ar(p.day||1)}</span>
+          <span>✅ ${ar(p.completed||0)} مهمة</span>
+          <span>🔥 ${ar(p.streak||0)} streak</span>
+          <span>🏅 ${ar(p.badges||0)} شارة</span>
+        </div>
+        <div class="progress-mini"><div class="progress-fill" style="width:${prog}%"></div></div>
+      </div>
+      <div class="lb-pts">${ar(p.points||0)}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderToday(){
+  const grid=document.getElementById('todayGrid');
+  if(!allPlayers.length){grid.innerHTML='<div class="no-data"><span class="no-data-icon">🌸</span><div class="no-data-txt">لا توجد بيانات!</div></div>';return;}
+  const now=Date.now();
+  grid.innerHTML=allPlayers.map(p=>{
+    const active=p.lastUpdate&&(now-p.lastUpdate)<86400000;
+    return `<div class="today-box">
+      <div class="today-name">${p.name}</div>
+      <div class="today-status">${active?'✅':'⭕'}</div>
+      <div class="today-pts">${active?ar(p.points||0)+' نقطة':'لم تلعب'}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderPlayers(){
+  const cards=document.getElementById('playerCards');
+  if(!allPlayers.length){cards.innerHTML='<div class="no-data"><span class="no-data-icon">🌸</span><div class="no-data-txt">لا توجد بيانات!</div></div>';return;}
+  const avatars=['🌸','🌺','🌻','🌷','🌼','💐','🍀','🌿','🌱','🌙','⭐','💫','✨','🎯','🏆'];
+  cards.innerHTML=allPlayers.map((p,i)=>{
+    const prog=Math.round((p.day||1)/28*100);
+    const av=avatars[i%avatars.length];
+    const now=Date.now();
+    const lastSeen=p.lastUpdate?formatTime(now-p.lastUpdate):'لم تسجل بعد';
+    return `<div class="pc">
+      <div class="pc-top">
+        <div class="pc-avatar">${av}</div>
+        <div>
+          <div class="pc-name">${p.name}</div>
+          <div class="pc-day">آخر نشاط: ${lastSeen} • يوم ${ar(p.day||1)} من ٢٨</div>
+        </div>
+      </div>
+      <div class="pc-stats">
+        <div class="pc-stat"><span class="pc-stat-val">${ar(p.points||0)}</span><span class="pc-stat-lbl">⭐ نقاط</span></div>
+        <div class="pc-stat"><span class="pc-stat-val">${ar(p.completed||0)}</span><span class="pc-stat-lbl">✅ مهام</span></div>
+        <div class="pc-stat"><span class="pc-stat-val">${ar(p.streak||0)}</span><span class="pc-stat-lbl">🔥 streak</span></div>
+        <div class="pc-stat"><span class="pc-stat-val">${ar(p.dailyDone||0)}</span><span class="pc-stat-lbl">📋 أيام كاملة</span></div>
+      </div>
+      <div class="pc-bar">
+        <div class="pc-bar-lbl"><span>التقدم الكلي</span><span>${ar(prog)}٪</span></div>
+        <div class="pc-bar-bg"><div class="pc-bar-fill" style="width:${prog}%"></div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function formatTime(ms){
+  const m=Math.floor(ms/60000);
+  const h=Math.floor(m/60);
+  const d=Math.floor(h/24);
+  if(d>0)return `منذ ${ar(d)} يوم`;
+  if(h>0)return `منذ ${ar(h)} ساعة`;
+  if(m>0)return `منذ ${ar(m)} دقيقة`;
+  return 'الآن';
+}
+
+// Auto refresh every 60 seconds
+loadData();
+setInterval(loadData,60000);
+</script>
+</body>
+</html>
